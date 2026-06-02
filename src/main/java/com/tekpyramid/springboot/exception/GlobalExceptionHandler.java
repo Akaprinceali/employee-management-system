@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.InputMismatchException;
+import com.tekpyramid.springboot.response.ApiResponse;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -23,7 +25,16 @@ public class GlobalExceptionHandler {
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
-
+    
+    @ExceptionHandler(InputMismatchException.class)
+    public ResponseEntity<ApiResponse> inputMismatchExceptionHandler(InputMismatchException exception){
+        ApiResponse response = new ApiResponse();
+        String msg = exception.getMessage() != null ? exception.getMessage() : "Invalid input provided";
+        response.setMessage(msg);
+        response.setHttpStatus(HttpStatus.BAD_REQUEST);
+        response.setData(null);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
 
 
 }
